@@ -1,4 +1,4 @@
-package org.example;
+package ru.nsu.fit.akitov.jdu;
 
 import java.nio.file.*;
 

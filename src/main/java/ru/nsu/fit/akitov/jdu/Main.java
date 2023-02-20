@@ -1,4 +1,4 @@
-package org.example;
+package ru.nsu.fit.akitov.jdu;
 
 import java.io.IOException;
 import java.nio.file.*;

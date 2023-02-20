@@ -1,4 +1,4 @@
-package org.example;
+package ru.nsu.fit.akitov.jdu;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -12,7 +12,7 @@ public class DirectoryInfo extends PathInfo {
     this.path = path;
     this.depth = depth;
 
-    if (PathInfo.SYMLINKS && Files.isSymbolicLink(path)) {
+    if (SYMLINKS && Files.isSymbolicLink(path)) {
       return;
     }
 
@@ -52,7 +52,7 @@ public class DirectoryInfo extends PathInfo {
       return result.toString();
     }
 
-    for (int i = 0; i < contentInfo.size() && i < PathInfo.getNMax(); i++) {
+    for (int i = 0; i < contentInfo.size() && i < getNMax(); i++) {
       result.append("\n");
       result.append(contentInfo.get(i).toString());
     }

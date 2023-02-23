@@ -18,4 +18,8 @@ public class FileCreator {
     }
     throw new IOException("no such file or directory");
   }
+
+  public static PathInfo create(Path path) throws IOException {
+    return create(path, 0);
+  }
 }

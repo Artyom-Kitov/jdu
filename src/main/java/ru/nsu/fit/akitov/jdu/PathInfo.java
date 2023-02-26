@@ -1,5 +1,6 @@
 package ru.nsu.fit.akitov.jdu;
 
+import java.io.IOException;
 import java.nio.file.*;
 
 public abstract class PathInfo {
@@ -31,7 +32,24 @@ public abstract class PathInfo {
     SYMLINKS = true;
   }
 
-  String getSizeSuffix() {
+  public static PathInfo of(Path path) throws IOException {
+    return of(path, 0);
+  }
+
+  protected static PathInfo of(Path path, int depth) throws IOException {
+    if (Files.isSymbolicLink(path)) {
+      return new SymlinkInfo(path, depth);
+    }
+    if (Files.isDirectory(path)) {
+      return new DirectoryInfo(path, depth);
+    }
+    if (Files.isRegularFile(path)) {
+      return new FileInfo(path, depth);
+    }
+    throw new IOException("no such file or directory");
+  }
+
+  protected String getSizeSuffix() {
     if (!accessible) {
       return " [inaccessible]";
     }

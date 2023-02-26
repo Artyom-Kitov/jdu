@@ -13,7 +13,7 @@ public class SymlinkInfo extends PathInfo {
 
     Path target = Files.readSymbolicLink(path);
     if (PathInfo.SYMLINKS && depth + 1 <= PathInfo.MAX_DEPTH) {
-      targetInfo = FileCreator.create(target, depth + 1);
+      targetInfo = PathInfo.of(target, depth + 1);
     }
   }
 

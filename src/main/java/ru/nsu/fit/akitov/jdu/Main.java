@@ -21,7 +21,7 @@ public class Main {
     }
 
     try {
-      PathInfo info = FileCreator.create(path, 0);
+      PathInfo info = PathInfo.of(path);
       System.out.println(info);
     } catch (IOException exception) {
       System.out.println("Error: " + exception.getMessage());

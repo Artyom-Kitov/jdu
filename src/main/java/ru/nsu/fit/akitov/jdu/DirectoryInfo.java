@@ -2,10 +2,11 @@ package ru.nsu.fit.akitov.jdu;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DirectoryInfo extends PathInfo {
-  private final ArrayList<PathInfo> contentInfo = new ArrayList<>();
+  private final List<PathInfo> contentInfo = new LinkedList<>();
   private String str;
 
   public DirectoryInfo(Path path, int depth) {
@@ -25,7 +26,7 @@ public class DirectoryInfo extends PathInfo {
 
     for (Path p : contentList) {
       try {
-        PathInfo info = FileCreator.create(p, depth + 1);
+        PathInfo info = PathInfo.of(p, depth + 1);
         if (contentInfo.size() == 0 || info.byteSize > contentInfo.get(0).byteSize) {
           contentInfo.add(0, info);
         } else {
@@ -53,8 +54,7 @@ public class DirectoryInfo extends PathInfo {
     }
 
     for (int i = 0; i < contentInfo.size() && i < getNMax(); i++) {
-      result.append("\n");
-      result.append(contentInfo.get(i).toString());
+      result.append("\n").append(contentInfo.get(i).toString());
     }
     str = result.toString();
     return str;

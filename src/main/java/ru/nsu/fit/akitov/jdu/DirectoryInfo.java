@@ -13,31 +13,20 @@ public class DirectoryInfo extends PathInfo {
     this.path = path;
     this.depth = depth;
 
-    if (SYMLINKS && Files.isSymbolicLink(path)) {
-      return;
-    }
-
-    Path[] contentList;
     try {
-      contentList = Files.list(path).toArray(Path[]::new);
-    } catch (IOException exception) {
-      return;
-    }
-
-    for (Path p : contentList) {
-      try {
+      Path[] contentList = Files.list(path).toArray(Path[]::new);
+      for (Path p : contentList) {
         PathInfo info = PathInfo.of(p, depth + 1);
         if (contentInfo.size() == 0 || info.byteSize > contentInfo.get(0).byteSize) {
           contentInfo.add(0, info);
         } else {
           contentInfo.add(info);
         }
-      } catch (IOException exception) {}
-    }
-
-    for (PathInfo info : contentInfo) {
-      this.byteSize += info.byteSize;
-    }
+      }
+      for (PathInfo info : contentInfo) {
+        this.byteSize += info.byteSize;
+      }
+    } catch (IOException exception) {}
   }
 
   @Override
@@ -49,7 +38,7 @@ public class DirectoryInfo extends PathInfo {
     result.append("  ".repeat(depth)).append("/").append(path.getFileName().toString());
     result.append(getSizeSuffix());
 
-    if (depth + 1 > MAX_DEPTH) {
+    if (depth + 1 > PathInfo.getMaxDepth()) {
       return result.toString();
     }
 

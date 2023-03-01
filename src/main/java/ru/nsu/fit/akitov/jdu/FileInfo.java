@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.*;
 
 public class FileInfo extends PathInfo {
-  public FileInfo(Path path, int depth) {
+   public FileInfo(Path path, int depth) {
     this.path = path;
     this.depth = depth;
     try {

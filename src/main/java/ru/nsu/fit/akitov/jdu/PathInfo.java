@@ -9,9 +9,9 @@ public abstract class PathInfo {
   protected long byteSize;
   protected boolean accessible = true;
 
-  protected static int MAX_DEPTH = 8;
-  protected static int N_MAX = 1024;
-  protected static boolean SYMLINKS = false;
+  private static int MAX_DEPTH = 8;
+  private static int N_MAX = 1024;
+  private static boolean SYMLINKS_SHOWN = false;
 
   public static int getMaxDepth() {
     return MAX_DEPTH;
@@ -28,8 +28,12 @@ public abstract class PathInfo {
     N_MAX = nMax;
   }
 
+  public static boolean symlinksShown() {
+    return SYMLINKS_SHOWN;
+  }
+
   public static void showSymlinks() {
-    SYMLINKS = true;
+    SYMLINKS_SHOWN = true;
   }
 
   public static PathInfo of(Path path) throws IOException {

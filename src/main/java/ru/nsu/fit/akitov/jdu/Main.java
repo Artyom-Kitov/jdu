@@ -27,7 +27,7 @@ public class Main {
       System.out.println("Error: " + exception.getMessage());
     }
   }
-  public static String usage() {
+  private static String usage() {
     return """
               Usage: ./jdu [OPTION]... [FILE]
               Summarize disk usage of the set of FILEs, recursively for directories.

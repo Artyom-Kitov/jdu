@@ -13,7 +13,10 @@ public abstract class PathInfo {
   private static int N_MAX = 1024;
   private static boolean SYMLINKS_SHOWN = false;
 
-  // Cross CR: Make constructor for PathInfo to avoid duplication of code in *Info classes
+  protected PathInfo(Path path, int depth) {
+    this.path = path;
+    this.depth = depth;
+  }
 
   public static int getMaxDepth() {
     return MAX_DEPTH;

@@ -11,8 +11,7 @@ public class SymlinkInfo extends PathInfo {
   private static final Set<Path> visited = new HashSet<>();
 
   public SymlinkInfo(Path path, int depth) {
-    this.path = path;
-    this.depth = depth;
+    super(path, depth);
     this.byteSize = 0;
 
     if (PathInfo.symlinksShown() && depth + 1 <= PathInfo.getMaxDepth() && !visited.contains(path)) {

@@ -20,6 +20,7 @@ public class Main {
       PathInfo.showSymlinks();
     }
 
+    // Croos CR: Not sure if it's ok to store all data in 1 big string (?)
     try {
       PathInfo info = PathInfo.of(path);
       System.out.println(info);
@@ -28,6 +29,7 @@ public class Main {
     }
   }
   private static String usage() {
+    // Cross CR : typo in "-L."
     return """
               Usage: ./jdu [OPTION]... [FILE]
               Summarize disk usage of the set of FILEs, recursively for directories.
@@ -39,6 +41,7 @@ public class Main {
               """;
   }
 
+  // Cross CR: change fileName type from String to Path
   private record Arguments(int depth, boolean links, int nMax, String fileName) {}
 
   private static Arguments getArguments(String[] args) {

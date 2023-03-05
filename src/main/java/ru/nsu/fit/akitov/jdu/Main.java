@@ -33,9 +33,9 @@ public class Main {
               Summarize disk usage of a file, recursively for directories.
               
               Possible options:
-                --depth n   Max recursion depth.
+                --depth n   Max recursion depth (8 by default).
                 -L          Go by symlinks.
-                --limit n   Show n heaviest files/directories.
+                --limit n   Show n heaviest files/directories in every directory.
               """;
   }
 

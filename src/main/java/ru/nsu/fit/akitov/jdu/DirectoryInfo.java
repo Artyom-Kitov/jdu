@@ -5,15 +5,13 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DirectoryInfo extends PathInfo {
-  // Cross CR: change LinkedList to ArrayList
+public final class DirectoryInfo extends PathInfo {
   private final List<PathInfo> contentInfo = new ArrayList<>();
   private String str;
 
   // Cross CR: too much responsibility for constructor (?)
-  public DirectoryInfo(Path path, int depth) {
+  protected DirectoryInfo(Path path, int depth) {
     super(path, depth);
-
     try {
       Path[] contentList = Files.list(path).toArray(Path[]::new);
       for (Path p : contentList) {

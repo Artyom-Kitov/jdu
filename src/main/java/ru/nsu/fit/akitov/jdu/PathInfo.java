@@ -60,6 +60,7 @@ public abstract class PathInfo {
     } else if (Files.isRegularFile(path)) {
       result = new FileInfo(path, depth);
     } else {
+      // AssertionError ||  IllegalStateException
       throw new IOException("no such file or directory");
     }
     return result;

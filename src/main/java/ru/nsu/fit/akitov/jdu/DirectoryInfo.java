@@ -10,6 +10,7 @@ public final class DirectoryInfo extends PathInfo {
   private String str;
 
   // Cross CR: too much responsibility for constructor (?)
+  // CR: pass List<PathInfo> contentInfo to ctor
   protected DirectoryInfo(Path path, int depth) {
     super(path, depth);
     try {

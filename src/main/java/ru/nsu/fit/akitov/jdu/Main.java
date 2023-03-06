@@ -7,6 +7,7 @@ public class Main {
   public static void main(String[] args) {
     Arguments arguments;
     try {
+      // CR: catch only custom exception
       arguments = getArguments(args);
     } catch (Exception exception) {
       System.out.println(usage());
@@ -27,6 +28,7 @@ public class Main {
       System.out.println("Error: " + exception.getMessage());
     }
   }
+
   private static String usage() {
     return """
               Usage: ./jdu [OPTIONS] [FILE]
@@ -39,9 +41,16 @@ public class Main {
               """;
   }
 
-  private record Arguments(int depth, boolean links, int nMax, Path fileName) {}
+  private record Arguments(int depth, boolean links, int nMax, Path fileName) {
+//    private static class ArgumentsBuilder {
+//      Arguments build() {
+//
+//      }
+//    }
+  }
 
   private static Arguments getArguments(String[] args) {
+    // CR: use builder
     int depth = PathInfo.getMaxDepth();
     boolean links = false;
     int nMax = PathInfo.getNMax();

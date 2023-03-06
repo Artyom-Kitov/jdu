@@ -4,9 +4,9 @@ import java.nio.file.*;
 
 public record Arguments(int depth, boolean showSymlinks, int limit, Path fileName) {
   public static class ArgumentsBuilder {
-    private int depth = PathInfo.getMaxDepth();
+    private int depth = 8;
     private boolean showSymlinks = false;
-    private int limit = PathInfo.getNMax();
+    private int limit = 1024;
     private Path fileName = Path.of(".");
     public ArgumentsBuilder setDepth(int depth) {
       this.depth = depth;

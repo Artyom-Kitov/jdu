@@ -1,7 +1,7 @@
 package ru.nsu.fit.akitov.jdu;
 
 import static ru.nsu.fit.akitov.jdu.Arguments.ArgumentsBuilder;
-import java.io.IOException;
+import ru.nsu.fit.akitov.jdu.core.*;
 import java.nio.file.*;
 
 public class Main {
@@ -22,19 +22,17 @@ public class Main {
       return;
     }
 
-    PathInfo.setNMax(arguments.limit());
-    PathInfo.setMaxDepth(arguments.depth());
-    if (arguments.showSymlinks()) {
-      PathInfo.showSymlinks();
-    }
+//    JduFile.setNMax(arguments.limit());
+//    JduFile.setMaxDepth(arguments.depth());
+//    if (arguments.showSymlinks()) {
+//      JduFile.showSymlinks();
+//    }
 
-    // Cross CR: Not sure if it's ok to store all data in 1 big string (?)
-    try {
-      PathInfo info = PathInfo.of(arguments.fileName());
-      System.out.println(info);
-    } catch (IOException exception) {
-      System.out.println("Error: " + exception.getMessage());
-    }
+//      JduFile info = JduFile.of(arguments.fileName());
+//      System.out.println(info);
+    JduFile file = JduBuilder.build(arguments.fileName(), arguments);
+    JduPrinter printer = new JduPrinter(System.out);
+    file.print(printer);
   }
 
   private static String usage() {

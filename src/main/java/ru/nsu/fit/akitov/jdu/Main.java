@@ -1,72 +1,88 @@
 package ru.nsu.fit.akitov.jdu;
 
+import static ru.nsu.fit.akitov.jdu.Arguments.ArgumentsBuilder;
 import java.io.IOException;
 import java.nio.file.*;
 
 public class Main {
   public static void main(String[] args) {
-    Arguments arguments;
-    try {
-      arguments = getArguments(args);
-    } catch (Exception exception) {
+    if (args.length == 0) {
       System.out.println(usage());
       return;
     }
 
-    Path path = Paths.get(arguments.fileName());
-    PathInfo.setNMax(arguments.nMax());
+    Arguments arguments;
+    try {
+      arguments = getArguments(args);
+    } catch (JduException exception) {
+      System.out.println("Error: " + exception.getMessage());
+      return;
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return;
+    }
+
+    PathInfo.setNMax(arguments.limit());
     PathInfo.setMaxDepth(arguments.depth());
-    if (arguments.links()) {
+    if (arguments.showSymlinks()) {
       PathInfo.showSymlinks();
     }
 
+    // Cross CR: Not sure if it's ok to store all data in 1 big string (?)
     try {
-      PathInfo info = PathInfo.of(path);
+      PathInfo info = PathInfo.of(arguments.fileName());
       System.out.println(info);
     } catch (IOException exception) {
       System.out.println("Error: " + exception.getMessage());
     }
   }
+
   private static String usage() {
     return """
-              Usage: ./jdu [OPTION]... [FILE]
-              Summarize disk usage of the set of FILEs, recursively for directories.
+              Usage: ./jdu [OPTIONS] [FILE]
+              Summarize disk usage of a file, recursively for directories.
               
               Possible options:
-                --depth n   Max recursion depth.
-                -L.         Go by symlinks.
-                --limit n   Show n heaviest files/directories.
+                --depth n   Max recursion depth (8 by default).
+                -L          Show symlinks.
+                --limit n   Show n heaviest files/directories in every directory.
               """;
   }
 
-  private record Arguments(int depth, boolean links, int nMax, String fileName) {}
-
-  private static Arguments getArguments(String[] args) {
-    int depth = PathInfo.getMaxDepth();
-    boolean links = false;
-    int nMax = PathInfo.getNMax();
-    String path = ".";
-
+  private static Arguments getArguments(String[] args) throws JduException {
+    ArgumentsBuilder builder = new ArgumentsBuilder();
     for (int i = 0; i < args.length; i++) {
       switch (args[i]) {
         case "--depth" -> {
-          depth = Integer.parseInt(args[i + 1]);
-          i++;
+          try {
+            builder.setDepth(Integer.parseInt(args[i + 1]));
+            i++;
+          } catch (NumberFormatException e) {
+            throw new JduException("wrong depth parameter: an integer value expected");
+          }
         }
         case "--limit" -> {
-          nMax = Integer.parseInt(args[i + 1]);
-          i++;
+          try {
+            builder.setLimit(Integer.parseInt(args[i + 1]));
+            i++;
+          } catch (NumberFormatException e) {
+            throw new JduException("wrong limit parameter: an integer value expected");
+          }
         }
-        case "-L" -> links = true;
+        case "-L" -> builder.setSymlinksDisplay(true);
         default -> {
           if (i == args.length - 1) {
-            path = args[i];
+            Path path = Path.of(args[i]);
+            if (!Files.exists(path)) {
+              throw new JduException("no such file or directory");
+            }
+            builder.setFileName(path);
           } else {
-            throw new IllegalArgumentException();
+            throw new JduException("no such parameter '" + args[i] + "'");
           }
         }
       }
     }
-    return new Arguments(depth, links, nMax, path);
+    return builder.build();
   }
 }

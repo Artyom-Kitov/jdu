@@ -5,14 +5,13 @@ import java.nio.file.*;
 import java.util.Set;
 import java.util.HashSet;
 
-public class SymlinkInfo extends PathInfo {
+public final class SymlinkInfo extends PathInfo {
   private PathInfo targetInfo;
 
   private static final Set<Path> visited = new HashSet<>();
 
-  public SymlinkInfo(Path path, int depth) {
-    this.path = path;
-    this.depth = depth;
+  protected SymlinkInfo(Path path, int depth) {
+    super(path, depth);
     this.byteSize = 0;
 
     if (PathInfo.symlinksShown() && depth + 1 <= PathInfo.getMaxDepth() && !visited.contains(path)) {

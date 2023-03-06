@@ -2,33 +2,33 @@ package ru.nsu.fit.akitov.jdu;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DirectoryInfo extends PathInfo {
-  private final List<PathInfo> contentInfo = new LinkedList<>();
+public final class DirectoryInfo extends PathInfo {
+  private final List<PathInfo> contentInfo = new ArrayList<>();
   private String str;
 
-  public DirectoryInfo(Path path, int depth) {
-    this.path = path;
-    this.depth = depth;
-
+  // Cross CR: too much responsibility for constructor (?)
+  // CR: pass List<PathInfo> contentInfo to ctor
+  protected DirectoryInfo(Path path, int depth) {
+    super(path, depth);
     try {
       Path[] contentList = Files.list(path).toArray(Path[]::new);
       for (Path p : contentList) {
         PathInfo info = PathInfo.of(p, depth + 1);
-        if (contentInfo.size() == 0 || info.byteSize > contentInfo.get(0).byteSize) {
-          contentInfo.add(0, info);
-        } else {
-          contentInfo.add(info);
-        }
+        contentInfo.add(info);
       }
+
+      contentInfo.sort((p1, p2) -> -Long.compare(p1.byteSize, p2.byteSize));
+
       for (PathInfo info : contentInfo) {
         this.byteSize += info.byteSize;
       }
     } catch (IOException exception) {}
   }
 
+  // Cross CR: Create separate method to build string (?)
   @Override
   public String toString() {
     if (str != null) {
@@ -38,7 +38,7 @@ public class DirectoryInfo extends PathInfo {
     result.append("  ".repeat(depth)).append("/").append(path.getFileName().toString());
     result.append(getSizeSuffix());
 
-    if (depth + 1 > PathInfo.getMaxDepth()) {
+    if (depth == PathInfo.getMaxDepth()) {
       return result.toString();
     }
 

@@ -13,6 +13,11 @@ public abstract class PathInfo {
   private static int N_MAX = 1024;
   private static boolean SYMLINKS_SHOWN = false;
 
+  protected PathInfo(Path path, int depth) {
+    this.path = path;
+    this.depth = depth;
+  }
+
   public static int getMaxDepth() {
     return MAX_DEPTH;
   }
@@ -36,21 +41,29 @@ public abstract class PathInfo {
     SYMLINKS_SHOWN = true;
   }
 
+  /**
+   * Returns an object with all information about a file or a directory.
+   * @param path path to a file or a directory.
+   * @return the resulting PathInfo.
+   * @throws IOException if no file or directory exists.
+   */
   public static PathInfo of(Path path) throws IOException {
     return of(path, 0);
   }
 
   protected static PathInfo of(Path path, int depth) throws IOException {
+    PathInfo result;
     if (Files.isSymbolicLink(path)) {
-      return new SymlinkInfo(path, depth);
+      result = new SymlinkInfo(path, depth);
+    } else if (Files.isDirectory(path)) {
+      result = new DirectoryInfo(path, depth);
+    } else if (Files.isRegularFile(path)) {
+      result = new FileInfo(path, depth);
+    } else {
+      // AssertionError ||  IllegalStateException
+      throw new IOException("no such file or directory");
     }
-    if (Files.isDirectory(path)) {
-      return new DirectoryInfo(path, depth);
-    }
-    if (Files.isRegularFile(path)) {
-      return new FileInfo(path, depth);
-    }
-    throw new IOException("no such file or directory");
+    return result;
   }
 
   protected String getSizeSuffix() {
@@ -67,6 +80,6 @@ public abstract class PathInfo {
       size /= 1024;
       suffix = " MiB";
     }
-    return " [" + size + suffix + "]";
+    return " [" + String.format("%.3f", size) + suffix + "]";
   }
 }

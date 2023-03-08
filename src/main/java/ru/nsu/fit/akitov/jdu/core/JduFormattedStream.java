@@ -2,11 +2,15 @@ package ru.nsu.fit.akitov.jdu.core;
 
 import java.io.PrintStream;
 
-public class JduPrinter implements Printer {
+public class JduFormattedStream implements JduPrintStream {
   private final PrintStream stream;
+  private final int depth;
+  private final int limit;
 
-  public JduPrinter(PrintStream stream) {
+  public JduFormattedStream(PrintStream stream, int depth, int limit) {
     this.stream = stream;
+    this.depth = depth;
+    this.limit = limit;
   }
 
   private String getSizeSuffix(JduFile file) {
@@ -42,10 +46,10 @@ public class JduPrinter implements Printer {
   @Override
   public void print(JduDirectory directory) {
     stream.println("  ".repeat(directory.depth) + "/" + directory.path.getFileName() + getSizeSuffix(directory));
-    if (directory.depth == directory.args.depth()) {
+    if (directory.depth == depth) {
       return;
     }
-    for (int i = 0; i < directory.content.size() && i < directory.args.limit(); i++) {
+    for (int i = 0; i < directory.content.size() && i < limit; i++) {
       directory.content.get(i).print(this);
     }
   }

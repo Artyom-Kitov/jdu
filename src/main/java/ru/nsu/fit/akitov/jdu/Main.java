@@ -14,25 +14,21 @@ public class Main {
     Arguments arguments;
     try {
       arguments = getArguments(args);
-    } catch (JduException exception) {
-      System.out.println("Error: " + exception.getMessage());
+    } catch (JduException e) {
+      System.out.println("Error: " + e.getMessage());
       return;
     } catch (Exception exception) {
       exception.printStackTrace();
       return;
     }
 
-//    JduFile.setNMax(arguments.limit());
-//    JduFile.setMaxDepth(arguments.depth());
-//    if (arguments.showSymlinks()) {
-//      JduFile.showSymlinks();
-//    }
-
-//      JduFile info = JduFile.of(arguments.fileName());
-//      System.out.println(info);
-    JduFile file = JduBuilder.build(arguments.fileName(), arguments);
-    JduPrinter printer = new JduPrinter(System.out);
-    file.print(printer);
+    try {
+      JduFile file = JduBuilder.build(arguments);
+      JduFormattedStream printer = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
+      file.print(printer);
+    } catch (JduException e) {
+      System.out.println("Error: " + e.getMessage());
+    }
   }
 
   private static String usage() {

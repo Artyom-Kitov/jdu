@@ -15,7 +15,7 @@ public final class JduDirectory extends JduFile {
   }
 
   @Override
-  public void print(JduPrintStream stream) {
+  public void accept(JduPrintStream stream) {
     stream.print(this);
   }
 }

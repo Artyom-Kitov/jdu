@@ -22,7 +22,7 @@ public class Main {
     try {
       JduFile file = JduBuilder.build(arguments);
       JduFormattedStream printer = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
-      file.print(printer);
+      file.accept(printer);
     } catch (JduException e) {
       System.out.println("Error: " + e.getMessage());
     }

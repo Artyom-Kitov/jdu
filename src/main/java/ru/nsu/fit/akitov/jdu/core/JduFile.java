@@ -14,5 +14,5 @@ public abstract class JduFile {
     this.depth = depth;
   }
 
-  public abstract void print(JduPrintStream stream);
+  public abstract void accept(JduPrintStream stream);
 }

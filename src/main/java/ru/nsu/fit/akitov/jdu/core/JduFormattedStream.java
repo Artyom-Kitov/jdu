@@ -39,7 +39,7 @@ public class JduFormattedStream implements JduPrintStream {
   public void print(JduSymlink symlink) {
     stream.println("  ".repeat(symlink.depth) + symlink.path.getFileName() + " [symlink]");
     if (symlink.target != null) {
-      symlink.target.print(this);
+      symlink.target.accept(this);
     }
   }
 
@@ -50,7 +50,7 @@ public class JduFormattedStream implements JduPrintStream {
       return;
     }
     for (int i = 0; i < directory.content.size() && i < limit; i++) {
-      directory.content.get(i).print(this);
+      directory.content.get(i).accept(this);
     }
   }
 }

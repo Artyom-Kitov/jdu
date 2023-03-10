@@ -6,18 +6,15 @@ import java.nio.file.*;
 
 public class Main {
   public static void main(String[] args) {
-    if (args.length == 0) {
-      System.out.println(usage());
-      return;
-    }
-
     Arguments arguments;
     try {
       arguments = getArguments(args);
     } catch (JduException e) {
-      System.out.println("Error: " + e.getMessage());
+      System.err.println("Error: " + e.getMessage());
+      System.err.println(usage());
       return;
     } catch (Exception exception) {
+      // CR: custom message
       exception.printStackTrace();
       return;
     }

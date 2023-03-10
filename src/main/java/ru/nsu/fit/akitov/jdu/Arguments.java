@@ -8,6 +8,7 @@ public record Arguments(int depth, boolean showSymlinks, int limit, Path fileNam
     private boolean showSymlinks = false;
     private int limit = 1024;
     private Path fileName = Path.of(".");
+
     public ArgumentsBuilder setDepth(int depth) {
       this.depth = depth;
       return this;

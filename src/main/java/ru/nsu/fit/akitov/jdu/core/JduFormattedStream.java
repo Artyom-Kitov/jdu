@@ -13,7 +13,7 @@ public class JduFormattedStream implements JduPrintStream {
     this.limit = limit;
   }
 
-  private String getSizeSuffix(JduFile file) {
+  private static String getSizeSuffix(JduFile file) {
     if (!file.accessible) {
       return " [inaccessible]";
     }

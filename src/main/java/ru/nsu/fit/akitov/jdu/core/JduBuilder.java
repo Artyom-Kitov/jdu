@@ -11,7 +11,7 @@ import java.util.List;
 
 import static java.nio.file.Files.list;
 
-public class JduBuilder {
+public final class JduBuilder {
   private JduBuilder() {}
 
   public static JduFile build(Arguments args) throws JduException {
@@ -40,6 +40,7 @@ public class JduBuilder {
         Path p = Files.readSymbolicLink(path);
         target = JduBuilder.build(p, args, depth + 1);
       } catch (IOException e) {
+        // CR: log4j, continue working
         throw new JduException("can't show symlink \"" + path.getFileName() + "\"");
       }
     }
@@ -54,6 +55,7 @@ public class JduBuilder {
         JduFile file = JduBuilder.build(p, args, depth + 1);
         content.add(file);
       }
+      // CR: move to print stage
       content.sort((p1, p2) -> -Long.compare(p1.byteSize, p2.byteSize));
       return new JduDirectory(path, depth, content);
     } catch (IOException e) {

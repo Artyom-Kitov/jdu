@@ -1,8 +1,12 @@
 package ru.nsu.fit.akitov.jdu;
 
 import static ru.nsu.fit.akitov.jdu.Arguments.ArgumentsBuilder;
-import ru.nsu.fit.akitov.jdu.core.*;
-import java.nio.file.*;
+
+import ru.nsu.fit.akitov.jdu.model.JduBuilder;
+import ru.nsu.fit.akitov.jdu.model.JduFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Main {
   public static void main(String[] args) {
@@ -14,7 +18,7 @@ public class Main {
       System.err.println(usage());
       return;
     } catch (Exception exception) {
-      // CR: custom message
+      System.out.println("Something unknown happened, please try again or contact a developer");
       exception.printStackTrace();
       return;
     }

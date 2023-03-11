@@ -1,10 +1,12 @@
-package ru.nsu.fit.akitov.jdu.core;
+package ru.nsu.fit.akitov.jdu.model;
 
-import java.nio.file.*;
+import ru.nsu.fit.akitov.jdu.JduVisitor;
+
+import java.nio.file.Path;
 import java.util.List;
 
 public final class JduDirectory extends JduFile {
-  final List<JduFile> content;
+  private final List<JduFile> content;
 
   JduDirectory(Path path, int depth, List<JduFile> content) {
     super(path, depth);
@@ -14,8 +16,12 @@ public final class JduDirectory extends JduFile {
     }
   }
 
+  public List<JduFile> getContent() {
+    return content;
+  }
+
   @Override
-  public void accept(JduPrintStream stream) {
-    stream.print(this);
+  public void accept(JduVisitor visitor) {
+    visitor.visit(this);
   }
 }

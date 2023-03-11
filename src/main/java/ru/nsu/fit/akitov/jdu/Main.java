@@ -40,8 +40,7 @@ public class Main {
               Possible options:
                 --depth n   Max recursion depth (8 by default).
                 -L          Show symlinks.
-                --limit n   Show n heaviest files/directories in every directory.
-              """;
+                --limit n   Show n heaviest files/directories in every directory.""";
   }
 
   private static Arguments getArguments(String[] args) throws JduException {
@@ -69,7 +68,7 @@ public class Main {
           if (i == args.length - 1) {
             Path path = Path.of(args[i]);
             if (!Files.exists(path)) {
-              throw new JduException("no such file or directory");
+              throw new JduException("no such file or directory: " + path);
             }
             builder.setFileName(path);
           } else {

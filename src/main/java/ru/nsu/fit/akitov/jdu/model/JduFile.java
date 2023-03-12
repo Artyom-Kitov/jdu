@@ -1,17 +1,18 @@
 package ru.nsu.fit.akitov.jdu.model;
 
-import ru.nsu.fit.akitov.jdu.JduVisitor;
-
 import java.nio.file.Path;
+import ru.nsu.fit.akitov.jdu.JduVisitor;
 
 public abstract class JduFile {
   protected Path path;
   protected int depth;
   protected long byteSize;
+  protected boolean accessible;
 
-  protected JduFile(Path path, int depth) {
+  protected JduFile(Path path, int depth, boolean accessible) {
     this.path = path;
     this.depth = depth;
+    this.accessible = accessible;
   }
 
   public Path getPath() {
@@ -24,6 +25,10 @@ public abstract class JduFile {
 
   public int getDepth() {
     return depth;
+  }
+
+  public boolean isAccessible() {
+    return accessible;
   }
 
   public abstract void accept(JduVisitor stream);

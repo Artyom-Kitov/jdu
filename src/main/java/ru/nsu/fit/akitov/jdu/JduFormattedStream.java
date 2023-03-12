@@ -1,11 +1,10 @@
 package ru.nsu.fit.akitov.jdu;
 
+import java.io.PrintStream;
 import ru.nsu.fit.akitov.jdu.model.JduDirectory;
 import ru.nsu.fit.akitov.jdu.model.JduFile;
 import ru.nsu.fit.akitov.jdu.model.JduRegularFile;
 import ru.nsu.fit.akitov.jdu.model.JduSymlink;
-
-import java.io.PrintStream;
 
 public class JduFormattedStream implements JduVisitor {
   private final PrintStream stream;
@@ -19,6 +18,9 @@ public class JduFormattedStream implements JduVisitor {
   }
 
   private static String getSizeSuffix(JduFile file) {
+    if (!file.isAccessible()) {
+      return " [inaccessible]";
+    }
     float size = file.getByteSize();
     String suffix = " B";
     if (size / 1024 >= 1) {
@@ -32,11 +34,19 @@ public class JduFormattedStream implements JduVisitor {
     return " [" + String.format("%.3f", size) + suffix + "]";
   }
 
+  /**
+   * Prints the given JduRegularFile to the PrintStream using visitor pattern.
+   * @param regularFile file to be printed.
+   */
   @Override
   public void visit(JduRegularFile regularFile) {
     stream.println("  ".repeat(regularFile.getDepth()) + regularFile.getPath().getFileName() + getSizeSuffix(regularFile));
   }
 
+  /**
+   * Prints the given JduSymlink to the PrintStream using visitor pattern.
+   * @param symlink symlink to be printed.
+   */
   @Override
   public void visit(JduSymlink symlink) {
     stream.println("  ".repeat(symlink.getDepth()) + symlink.getPath().getFileName() + " [symlink]");
@@ -45,6 +55,10 @@ public class JduFormattedStream implements JduVisitor {
     }
   }
 
+  /**
+   * Prints the given JduDirectory (recursively for subdirectories) to the PrintStream using visitor pattern.
+   * @param directory directory to be printed.
+   */
   @Override
   public void visit(JduDirectory directory) {
     stream.println("  ".repeat(directory.getDepth()) + "/" + directory.getPath().getFileName() + getSizeSuffix(directory));

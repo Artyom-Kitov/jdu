@@ -1,6 +1,6 @@
 package ru.nsu.fit.akitov.jdu;
 
-import java.nio.file.*;
+import java.nio.file.Path;
 
 public record Arguments(int depth, boolean showSymlinks, int limit, Path fileName) {
   public static class ArgumentsBuilder {

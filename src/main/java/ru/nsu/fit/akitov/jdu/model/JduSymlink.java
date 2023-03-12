@@ -1,14 +1,13 @@
 package ru.nsu.fit.akitov.jdu.model;
 
-import ru.nsu.fit.akitov.jdu.JduVisitor;
-
 import java.nio.file.Path;
+import ru.nsu.fit.akitov.jdu.JduVisitor;
 
 public final class JduSymlink extends JduFile {
   private final JduFile target;
 
-  JduSymlink(Path path, int depth, JduFile target) {
-    super(path, depth);
+  JduSymlink(Path path, int depth, boolean accessible, JduFile target) {
+    super(path, depth, accessible);
     this.byteSize = 0;
     this.target = target;
   }

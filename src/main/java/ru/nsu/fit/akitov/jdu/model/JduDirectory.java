@@ -1,15 +1,14 @@
 package ru.nsu.fit.akitov.jdu.model;
 
-import ru.nsu.fit.akitov.jdu.JduVisitor;
-
 import java.nio.file.Path;
 import java.util.List;
+import ru.nsu.fit.akitov.jdu.JduVisitor;
 
 public final class JduDirectory extends JduFile {
   private final List<JduFile> content;
 
-  JduDirectory(Path path, int depth, List<JduFile> content) {
-    super(path, depth);
+  JduDirectory(Path path, int depth, boolean accessible, List<JduFile> content) {
+    super(path, depth, accessible);
     this.content = content;
     for (JduFile info : content) {
       this.byteSize += info.byteSize;

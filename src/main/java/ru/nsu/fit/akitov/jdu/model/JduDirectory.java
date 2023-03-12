@@ -1,8 +1,9 @@
 package ru.nsu.fit.akitov.jdu.model;
 
+import ru.nsu.fit.akitov.jdu.JduVisitor;
+
 import java.nio.file.Path;
 import java.util.List;
-import ru.nsu.fit.akitov.jdu.JduVisitor;
 
 public final class JduDirectory extends JduFile {
   private final List<JduFile> content;

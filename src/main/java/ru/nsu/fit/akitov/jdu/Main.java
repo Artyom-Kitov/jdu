@@ -1,9 +1,10 @@
 package ru.nsu.fit.akitov.jdu;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import ru.nsu.fit.akitov.jdu.model.JduBuilder;
 import ru.nsu.fit.akitov.jdu.model.JduFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Main {
   public static void main(String[] args) {
@@ -20,7 +21,8 @@ public class Main {
       return;
     }
 
-    JduFile file = JduBuilder.build(arguments);
+    JduBuilder jduBuilder = new JduBuilder();
+    JduFile file = jduBuilder.build(arguments);
     JduVisitor stream = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
     file.accept(stream);
   }
@@ -37,7 +39,7 @@ public class Main {
   }
 
   private static Arguments getArguments(String[] args) throws JduException {
-    Arguments.ArgumentsBuilder builder = new Arguments.ArgumentsBuilder();
+    Arguments.Builder builder = new Arguments.Builder();
     for (int i = 0; i < args.length; i++) {
       switch (args[i]) {
         case "--depth" -> {

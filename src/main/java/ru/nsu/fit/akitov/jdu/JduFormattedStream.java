@@ -1,10 +1,11 @@
 package ru.nsu.fit.akitov.jdu;
 
-import java.io.PrintStream;
 import ru.nsu.fit.akitov.jdu.model.JduDirectory;
 import ru.nsu.fit.akitov.jdu.model.JduFile;
 import ru.nsu.fit.akitov.jdu.model.JduRegularFile;
 import ru.nsu.fit.akitov.jdu.model.JduSymlink;
+
+import java.io.PrintStream;
 
 public class JduFormattedStream implements JduVisitor {
   private final PrintStream stream;

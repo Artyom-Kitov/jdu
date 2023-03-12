@@ -14,10 +14,13 @@ import ru.nsu.fit.akitov.jdu.Arguments;
 import static java.nio.file.Files.list;
 
 public final class JduBuilder {
-  private static final Set<Path> visited = new HashSet<>();
-  private static final Logger logger = LogManager.getLogger("jdu");
+  private final Set<Path> visited;
+  private final Logger logger;
 
-  private JduBuilder() {}
+  public JduBuilder() {
+    visited = new HashSet<>();
+    this.logger = LogManager.getLogger("jdu");
+  }
 
   /**
    * Builds a JduFile for the path specified in args, recursively for symlinks and directories.
@@ -28,11 +31,11 @@ public final class JduBuilder {
    * @param args command line arguments to specify what to build.
    * @return the resulting JduFile.
    */
-  public static JduFile build(Arguments args) {
+  public JduFile build(Arguments args) {
     return build(args.fileName(), args, 0);
   }
 
-  private static JduFile build(Path path, Arguments args, int depth) {
+  private JduFile build(Path path, Arguments args, int depth) {
     JduFile result = null;
     if (Files.isSymbolicLink(path)) {
       result = buildSymlink(path, args, depth);
@@ -46,7 +49,7 @@ public final class JduBuilder {
     return result;
   }
 
-  private static JduFile buildSymlink(Path path, Arguments args, int depth) {
+  private JduFile buildSymlink(Path path, Arguments args, int depth) {
     JduFile target = null;
     Path real = null;
     boolean accessible = true;
@@ -60,7 +63,7 @@ public final class JduBuilder {
       visited.add(real);
       try {
         Path p = Files.readSymbolicLink(path);
-        target = JduBuilder.build(p, args, depth + 1);
+        target = build(p, args, depth + 1);
       } catch (IOException e) {
         logger.warn("Can't show symlink '" + path + "'");
         accessible = false;
@@ -69,13 +72,13 @@ public final class JduBuilder {
     return new JduSymlink(path, depth, accessible, target);
   }
 
-  private static JduFile buildDirectory(Path path, Arguments args, int depth) {
+  private JduFile buildDirectory(Path path, Arguments args, int depth) {
     List<JduFile> content = new ArrayList<>();
     boolean accessible = true;
     try (var contentStream = list(path)) {
       Path[] contentArray = contentStream.toArray(Path[]::new);
       for (Path p : contentArray) {
-        JduFile file = JduBuilder.build(p, args, depth + 1);
+        JduFile file = build(p, args, depth + 1);
         content.add(file);
       }
     } catch (IOException e) {
@@ -85,7 +88,7 @@ public final class JduBuilder {
     return new JduDirectory(path, depth, accessible, content);
   }
 
-  private static JduFile buildRegularFile(Path path, int depth) {
+  private JduFile buildRegularFile(Path path, int depth) {
     long byteSize = 0;
     boolean accessible = true;
     try {

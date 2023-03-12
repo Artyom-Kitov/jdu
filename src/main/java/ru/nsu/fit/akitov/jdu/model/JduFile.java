@@ -1,6 +1,8 @@
 package ru.nsu.fit.akitov.jdu.model;
 
 import java.nio.file.Path;
+import java.util.Objects;
+
 import ru.nsu.fit.akitov.jdu.JduVisitor;
 
 public abstract class JduFile {
@@ -32,4 +34,12 @@ public abstract class JduFile {
   }
 
   public abstract void accept(JduVisitor stream);
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof JduFile file)) {
+      return false;
+    }
+    return Objects.equals(path, file.path);
+  }
 }

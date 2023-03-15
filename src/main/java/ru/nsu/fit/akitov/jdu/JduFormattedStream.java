@@ -7,11 +7,21 @@ import ru.nsu.fit.akitov.jdu.model.JduSymlink;
 
 import java.io.PrintStream;
 
+/**
+ * A wrapper over {@code PrintStream} to print a {@code JduFile} in tree-like order
+ * using {@code JduVisitor}.
+ */
 public class JduFormattedStream implements JduVisitor {
   private final PrintStream stream;
   private final int depth;
   private final int limit;
 
+  /**
+   * Constructs a {@code JduFormattedStream}.
+   * @param stream {@code PrintStream} to which everything is printed.
+   * @param depth max output recursion depth.
+   * @param limit print {@code limit} files in each directory.
+   */
   public JduFormattedStream(PrintStream stream, int depth, int limit) {
     this.stream = stream;
     this.depth = depth;

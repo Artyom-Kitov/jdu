@@ -13,15 +13,13 @@ import java.util.List;
 import static junit.framework.TestCase.*;
 
 public class JduBuilderTest extends JduTest {
-  private final JduBuilder jduBuilder = new JduBuilder();
   @Test
   public void emptyDirectory() throws IOException {
     FileSystem fs = fileSystem();
     Path tmp = fs.getPath("tmp");
     Files.createDirectory(tmp);
 
-    Arguments.Builder builder = new Arguments.Builder();
-    JduFile file = jduBuilder.build(builder.setFileName(tmp).build());
+    JduFile file = jduBuilder().build(argumentsBuilder().setFileName(tmp).build());
     assertTrue(file instanceof JduDirectory);
     assertTrue(file.isAccessible());
     assertEquals(0, file.getByteSize());
@@ -33,8 +31,7 @@ public class JduBuilderTest extends JduTest {
     Path tmp = fs.getPath("tmp");
     Files.createFile(tmp);
 
-    Arguments.Builder builder = new Arguments.Builder();
-    JduFile file = jduBuilder.build(builder.setFileName(tmp).build());
+    JduFile file = jduBuilder().build(argumentsBuilder().setFileName(tmp).build());
     assertTrue(file instanceof JduRegularFile);
     assertTrue(file.isAccessible());
     assertEquals(0, file.getByteSize());
@@ -48,8 +45,7 @@ public class JduBuilderTest extends JduTest {
     Path link = fs.getPath("tmp");
     Files.createSymbolicLink(link, target);
 
-    Arguments.Builder builder = new Arguments.Builder();
-    JduFile file = jduBuilder.build(builder.setFileName(link).setSymlinksDisplay(true).build());
+    JduFile file = jduBuilder().build(argumentsBuilder().setFileName(link).setSymlinksDisplay(true).build());
     assertTrue(file instanceof JduSymlink);
     assertTrue(file.isAccessible());
     assertEquals(0, file.getByteSize());
@@ -64,8 +60,7 @@ public class JduBuilderTest extends JduTest {
     Files.createFile(f);
     Files.write(f, new byte[1024]);
 
-    Arguments.Builder builder = new Arguments.Builder();
-    JduFile file = jduBuilder.build(builder.setFileName(f).build());
+    JduFile file = jduBuilder().build(argumentsBuilder().setFileName(f).build());
     assertEquals(1024, file.getByteSize());
   }
 
@@ -85,10 +80,10 @@ public class JduBuilderTest extends JduTest {
     Files.createFile(g);
     Files.write(g, new byte[1024]);
 
-    Arguments.Builder builder = new Arguments.Builder();
-    JduDirectory jduDir1 = (JduDirectory) jduBuilder.build(builder.setFileName(dir1).build());
-    JduFile jduDir2 = jduBuilder.build(builder.setFileName(dir2).build());
-    JduFile jduG = jduBuilder.build(builder.setFileName(g).build());
+    Arguments.Builder builder = argumentsBuilder();
+    JduDirectory jduDir1 = (JduDirectory) jduBuilder().build(builder.setFileName(dir1).build());
+    JduFile jduDir2 = jduBuilder().build(builder.setFileName(dir2).build());
+    JduFile jduG = jduBuilder().build(builder.setFileName(g).build());
     assertEquals(5120, jduDir1.getByteSize());
     assertEquals(List.of(jduDir2, jduG), jduDir1.getContent());
   }
@@ -101,10 +96,10 @@ public class JduBuilderTest extends JduTest {
     Path link = fs.getPath("/d/link");
     Files.createSymbolicLink(link, fs.getPath("/"));
 
-    Arguments.Builder builder = new Arguments.Builder();
-    JduSymlink jduLink = (JduSymlink) jduBuilder.build(builder.setFileName(link).setSymlinksDisplay(true).build());
+    Arguments.Builder builder = argumentsBuilder();
+    JduSymlink jduLink = (JduSymlink) jduBuilder().build(builder.setFileName(link).setSymlinksDisplay(true).build());
     assertEquals(fs.getPath("/"), jduLink.getTarget().getPath());
-    jduLink = (JduSymlink) jduBuilder.build(builder.build());
+    jduLink = (JduSymlink) jduBuilder().build(builder.build());
     assertNull(jduLink.getTarget());
   }
 }

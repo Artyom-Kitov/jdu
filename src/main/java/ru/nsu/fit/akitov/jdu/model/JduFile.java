@@ -5,6 +5,12 @@ import java.util.Objects;
 
 import ru.nsu.fit.akitov.jdu.JduVisitor;
 
+/**
+ * An object that could be used to get some information about
+ * a file, a directory or a symlink.
+ * <br/>
+ * Created using {@code JduBuilder} only.
+ */
 public abstract class JduFile {
   protected Path path;
   protected int depth;
@@ -41,5 +47,10 @@ public abstract class JduFile {
       return false;
     }
     return Objects.equals(path, file.path);
+  }
+
+  @Override
+  public int hashCode() {
+    return path.hashCode();
   }
 }

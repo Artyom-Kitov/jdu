@@ -23,13 +23,12 @@ public final class JduBuilder {
   }
 
   /**
-   * Builds a JduFile for the path specified in args, recursively for symlinks and directories.
+   * Builds a {@code JduFile} for the path specified in args, recursively for symlinks and directories.
    * Returns null and logs an error if no such file or directory exists or something unexpected happened.
    * If the path is a regular file and couldn't get its size, logs a warning.
    * If something went wrong while reading a directory, logs a warning.
-   * If args.showSymlinks() is true and couldn't get symlink target, logs a warning.
    * @param args command line arguments to specify what to build.
-   * @return the resulting JduFile.
+   * @return the resulting {@code JduFile}.
    */
   public JduFile build(Arguments args) {
     return build(args.fileName(), args, 0);
@@ -51,16 +50,9 @@ public final class JduBuilder {
 
   private JduFile buildSymlink(Path path, Arguments args, int depth) {
     JduFile target = null;
-    Path real = null;
     boolean accessible = true;
-    try {
-      real = path.toRealPath();
-    } catch (IOException e) {
-      logger.info("Couldn't get the full path of '" + path + "'");
-      accessible = false;
-    }
-    if (args.showSymlinks() && depth + 1 <= args.depth() && !visited.contains(real)) {
-      visited.add(real);
+    if (args.showSymlinks() && depth + 1 <= args.depth() && !visited.contains(path)) {
+      visited.add(path);
       try {
         Path p = Files.readSymbolicLink(path);
         target = build(p, args, depth + 1);
@@ -79,7 +71,9 @@ public final class JduBuilder {
       Path[] contentArray = contentStream.toArray(Path[]::new);
       for (Path p : contentArray) {
         JduFile file = build(p, args, depth + 1);
-        content.add(file);
+        if (file != null) {
+          content.add(file);
+        }
       }
     } catch (IOException e) {
       logger.warn("Couldn't read directory '" + path + "'");

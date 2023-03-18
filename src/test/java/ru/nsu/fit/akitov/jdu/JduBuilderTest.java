@@ -2,7 +2,10 @@ package ru.nsu.fit.akitov.jdu;
 
 import org.junit.Test;
 import ru.nsu.fit.akitov.jdu.core.JduTest;
-import ru.nsu.fit.akitov.jdu.model.*;
+import ru.nsu.fit.akitov.jdu.model.JduDirectory;
+import ru.nsu.fit.akitov.jdu.model.JduFile;
+import ru.nsu.fit.akitov.jdu.model.JduRegularFile;
+import ru.nsu.fit.akitov.jdu.model.JduSymlink;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -42,14 +45,29 @@ public class JduBuilderTest extends JduTest {
     FileSystem fs = fileSystem();
     Path target = fs.getPath("f");
     Files.createFile(target);
-    Path link = fs.getPath("tmp");
+    Path link = fs.getPath("link");
     Files.createSymbolicLink(link, target);
 
     JduFile file = jduBuilder().build(argumentsBuilder().setFileName(link).setSymlinksDisplay(true).build());
     assertTrue(file instanceof JduSymlink);
     assertTrue(file.isAccessible());
     assertEquals(0, file.getByteSize());
-    JduSymlink symlink = (JduSymlink)file;
+    JduSymlink symlink = (JduSymlink) file;
+    assertEquals(target, symlink.getTarget().getPath());
+  }
+
+  @Test
+  public void symlinkToDirectory() throws IOException {
+    FileSystem fs = fileSystem();
+    Path target = fs.getPath("d");
+    Files.createDirectory(target);
+    Path link = fs.getPath("link");
+    Files.createSymbolicLink(link, target);
+
+    JduFile file = jduBuilder().build(argumentsBuilder().setFileName(link).setSymlinksDisplay(true).build());
+    assertTrue(file.isAccessible());
+    assertEquals(0, file.getByteSize());
+    JduSymlink symlink = (JduSymlink) file;
     assertEquals(target, symlink.getTarget().getPath());
   }
 

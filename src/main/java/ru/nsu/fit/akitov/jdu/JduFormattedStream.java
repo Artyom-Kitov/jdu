@@ -8,8 +8,8 @@ import ru.nsu.fit.akitov.jdu.model.JduSymlink;
 import java.io.PrintStream;
 
 /**
- * A wrapper over {@code PrintStream} to print a {@code JduFile} in tree-like order
- * using {@code JduVisitor}.
+ * A wrapper over {@code PrintStream}, which prints a {@code JduFile} in tree-like order.
+ * Implements {@code JduVisitor}.
  */
 public class JduFormattedStream implements JduVisitor {
   private final PrintStream stream;
@@ -17,7 +17,7 @@ public class JduFormattedStream implements JduVisitor {
   private final int limit;
 
   /**
-   * Constructs a {@code JduFormattedStream}.
+   * Constructs a {@code JduFormattedStream} from given {@code PrintStream}.
    * @param stream {@code PrintStream} to which everything is printed.
    * @param depth max output recursion depth.
    * @param limit print {@code limit} files in each directory.
@@ -46,7 +46,8 @@ public class JduFormattedStream implements JduVisitor {
   }
 
   /**
-   * Prints the given JduRegularFile to the PrintStream using visitor pattern.
+   * Prints the given {@code JduRegularFile} name and its size
+   * to the {@code PrintStream} using {@code JduVisitor::visit}.
    * @param regularFile file to be printed.
    */
   @Override
@@ -55,7 +56,8 @@ public class JduFormattedStream implements JduVisitor {
   }
 
   /**
-   * Prints the given JduSymlink to the PrintStream using visitor pattern.
+   * Prints the given {@code JduSymlink} name and its target recursively (if built)
+   * to the {@code PrintStream} using {@code JduVisitor::visit}.
    * @param symlink symlink to be printed.
    */
   @Override
@@ -67,7 +69,8 @@ public class JduFormattedStream implements JduVisitor {
   }
 
   /**
-   * Prints the given JduDirectory (recursively for subdirectories) to the PrintStream using visitor pattern.
+   * Prints the given {@code JduDirectory} name, size and its content recursively
+   * to the {@code PrintStream} using {@code JduVisitor::visit}.
    * @param directory directory to be printed.
    */
   @Override

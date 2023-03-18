@@ -8,7 +8,6 @@ import ru.nsu.fit.akitov.jdu.JduVisitor;
 /**
  * An object that could be used to get some information about
  * a file, a directory or a symlink.
- * <br/>
  * Created using {@code JduBuilder} only.
  */
 public abstract class JduFile {
@@ -39,7 +38,7 @@ public abstract class JduFile {
     return accessible;
   }
 
-  public abstract void accept(JduVisitor stream);
+  public abstract void accept(JduVisitor visitor);
 
   @Override
   public boolean equals(Object o) {

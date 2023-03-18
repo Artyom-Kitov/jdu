@@ -19,16 +19,19 @@ public final class JduBuilder {
 
   public JduBuilder() {
     visited = new HashSet<>();
-    this.logger = LogManager.getLogger("jdu");
+    this.logger = LogManager.getLogger("ru.nsu.fit.akitov.jdu.model.JduBuilder");
   }
 
   /**
-   * Builds a {@code JduFile} for the path specified in args, recursively for symlinks and directories.
-   * Returns null and logs an error if no such file or directory exists or something unexpected happened.
-   * If the path is a regular file and couldn't get its size, logs a warning.
-   * If something went wrong while reading a directory, logs a warning.
+   * Builds a {@code JduFile} for the {@code Path} specified in {@code Arguments}.
+   * <p>If the {@code Path} is a directory, builds recursively for subdirectories.</p>
+   * <p>If the {@code Path} is a symbolic link and {@code showSymlinks} is true, builds recursively for target.</p>
+   * <p>Logs an error if no such file or directory exists or something unexpected happened.</p>
+   * <p>If the path is a regular file and couldn't get its size, logs a warning.</p>
+   * <p>If something went wrong while reading a directory, logs a warning and returns null.</p>
    * @param args command line arguments to specify what to build.
-   * @return the resulting {@code JduFile}.
+   * @return the resulting {@code JduFile} or null if no such file or directory exists
+   * or something unexpected happened.
    */
   public JduFile build(Arguments args) {
     return build(args.fileName(), args, 0);

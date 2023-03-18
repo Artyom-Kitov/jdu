@@ -80,9 +80,9 @@ public class JduFormattedStream implements JduVisitor {
     if (directory.getDepth() == depth) {
       return;
     }
-    directory.getContent().sort((p1, p2) -> -Long.compare(p1.getByteSize(), p2.getByteSize()));
-    for (int i = 0; i < directory.getContent().size() && i < limit; i++) {
-      directory.getContent().get(i).accept(this);
+    directory.getChildren().sort((p1, p2) -> -Long.compare(p1.getByteSize(), p2.getByteSize()));
+    for (int i = 0; i < directory.getChildren().size() && i < limit; i++) {
+      directory.getChildren().get(i).accept(this);
     }
   }
 }

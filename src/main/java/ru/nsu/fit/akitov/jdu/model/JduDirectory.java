@@ -6,18 +6,20 @@ import java.nio.file.Path;
 import java.util.List;
 
 public final class JduDirectory extends JduFile {
-  private final List<JduFile> content;
+  private final List<JduFile> children;
 
-  JduDirectory(Path path, int depth, boolean accessible, List<JduFile> children) {
-    super(path, depth, accessible);
-    this.content = children;
-    for (JduFile child : children) {
-      this.byteSize += child.byteSize;
-    }
+  JduDirectory(Path path, int depth, long byteSize, List<JduFile> children) {
+    super(path, depth, byteSize);
+    this.children = children;
   }
 
-  public List<JduFile> getContent() {
-    return content;
+  public List<JduFile> getChildren() {
+    return children;
+  }
+
+  @Override
+  public boolean isAccessible() {
+    return children != null;
   }
 
   @Override

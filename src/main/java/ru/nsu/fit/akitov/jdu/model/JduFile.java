@@ -23,16 +23,14 @@ import ru.nsu.fit.akitov.jdu.JduVisitor;
 //record JduDir implements DuFile(Path path) {}
 
 public abstract sealed class JduFile permits JduDirectory, JduRegularFile, JduSymlink {
-  // CR: try to make final
-  protected Path path;
-  protected int depth;
-  protected long byteSize;
-  protected boolean accessible;
+  protected final Path path;
+  protected final int depth;
+  protected final long byteSize;
 
-  protected JduFile(Path path, int depth, boolean accessible) {
+  protected JduFile(Path path, int depth, long byteSize) {
     this.path = path;
     this.depth = depth;
-    this.accessible = accessible;
+    this.byteSize = byteSize;
   }
 
   public Path getPath() {
@@ -47,9 +45,7 @@ public abstract sealed class JduFile permits JduDirectory, JduRegularFile, JduSy
     return depth;
   }
 
-  public boolean isAccessible() {
-    return accessible;
-  }
+  public abstract boolean isAccessible();
 
   public abstract void accept(JduVisitor visitor);
 

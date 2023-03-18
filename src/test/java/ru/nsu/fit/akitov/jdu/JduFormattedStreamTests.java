@@ -3,6 +3,7 @@ package ru.nsu.fit.akitov.jdu;
 import org.junit.Before;
 import org.junit.Test;
 import ru.nsu.fit.akitov.jdu.core.JduTest;
+import ru.nsu.fit.akitov.jdu.model.JduBuilder;
 import ru.nsu.fit.akitov.jdu.model.JduFile;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +33,7 @@ public class JduFormattedStreamTests extends JduTest {
     Files.createFile(tmp);
 
     Arguments args = argumentsBuilder().setFileName(tmp).build();
-    JduFile file = jduBuilder().build(args);
+    JduFile file = JduBuilder.build(args);
 
     JduFormattedStream stream = new JduFormattedStream(ps, args.depth(), args.limit());
     file.accept(stream);
@@ -47,7 +48,7 @@ public class JduFormattedStreamTests extends JduTest {
     Files.createDirectory(tmp);
 
     Arguments args = argumentsBuilder().setFileName(tmp).build();
-    JduFile file = jduBuilder().build(args);
+    JduFile file = JduBuilder.build(args);
 
     JduFormattedStream stream = new JduFormattedStream(ps, args.depth(), args.limit());
     file.accept(stream);
@@ -71,7 +72,7 @@ public class JduFormattedStreamTests extends JduTest {
     Files.createDirectory(d3);
 
     Arguments args = argumentsBuilder().setLimit(1).setFileName(d).build();
-    JduFile directory = jduBuilder().build(args);
+    JduFile directory = JduBuilder.build(args);
 
     JduFormattedStream stream = new JduFormattedStream(ps, args.depth(), args.limit());
     directory.accept(stream);
@@ -95,7 +96,7 @@ public class JduFormattedStreamTests extends JduTest {
     Files.createDirectory(d3);
 
     Arguments args = argumentsBuilder().setDepth(1).setFileName(d).build();
-    JduFile directory = jduBuilder().build(args);
+    JduFile directory = JduBuilder.build(args);
 
     JduFormattedStream stream = new JduFormattedStream(ps, args.depth(), args.limit());
     directory.accept(stream);
@@ -120,7 +121,7 @@ public class JduFormattedStreamTests extends JduTest {
     Files.createSymbolicLink(link2, d2);
 
     Arguments arguments = argumentsBuilder().setSymlinksDisplay(true).setFileName(fs.getPath(".")).build();
-    JduFile file = jduBuilder().build(arguments);
+    JduFile file = JduBuilder.build(arguments);
 
     JduFormattedStream stream = new JduFormattedStream(ps, arguments.depth(), arguments.limit());
     file.accept(stream);
@@ -155,7 +156,7 @@ public class JduFormattedStreamTests extends JduTest {
     Files.createSymbolicLink(link2, d2);
 
     Arguments arguments = argumentsBuilder().setSymlinksDisplay(false).setFileName(fs.getPath(".")).build();
-    JduFile file = jduBuilder().build(arguments);
+    JduFile file = JduBuilder.build(arguments);
 
     JduFormattedStream stream = new JduFormattedStream(ps, arguments.depth(), arguments.limit());
     file.accept(stream);

@@ -13,18 +13,11 @@ public abstract class JduTest {
   @Rule
   public final ArgumentsBuilderRule argumentsBuilderRule = new ArgumentsBuilderRule();
 
-  @Rule
-  public final JduBuilderRule jduBuilderRule = new JduBuilderRule();
-
   protected FileSystem fileSystem() {
     return fileSystemRule.getFileSystem();
   }
 
   protected Arguments.Builder argumentsBuilder() {
     return argumentsBuilderRule.getArgumentsBuilder();
-  }
-
-  protected JduBuilder jduBuilder() {
-    return jduBuilderRule.getJduBuilder();
   }
 }

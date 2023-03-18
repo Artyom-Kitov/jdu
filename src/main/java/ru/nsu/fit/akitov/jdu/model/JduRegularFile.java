@@ -5,9 +5,13 @@ import ru.nsu.fit.akitov.jdu.JduVisitor;
 import java.nio.file.Path;
 
 public final class JduRegularFile extends JduFile {
-  JduRegularFile(Path path, int depth, boolean accessible, long byteSize) {
-    super(path, depth, accessible);
-    this.byteSize = byteSize;
+  JduRegularFile(Path path, int depth, long byteSize) {
+    super(path, depth, byteSize);
+  }
+
+  @Override
+  public boolean isAccessible() {
+    return byteSize != -1;
   }
 
   @Override

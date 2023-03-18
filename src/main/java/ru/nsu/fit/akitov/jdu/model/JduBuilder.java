@@ -19,7 +19,7 @@ public final class JduBuilder {
   private final Set<Path> visited;
   private final Logger logger;
 
-  public JduBuilder() {
+  private JduBuilder() {
     visited = new HashSet<>();
     this.logger = LogManager.getLogger("ru.nsu.fit.akitov.jdu.model.JduBuilder");
   }
@@ -35,8 +35,9 @@ public final class JduBuilder {
    * @return the resulting {@code JduFile} or null if no such file or directory exists
    * or something unexpected happened.
    */
-  public JduFile build(Arguments args) {
-    return build(args.fileName(), args, 0);
+  public static JduFile build(Arguments args) {
+    JduBuilder builder = new JduBuilder();
+    return builder.build(args.fileName(), args, 0);
   }
 
   private JduFile build(Path path, Arguments args, int depth) {
@@ -55,69 +56,44 @@ public final class JduBuilder {
 
   private JduFile buildSymlink(Path path, Arguments args, int depth) {
     JduFile target = null;
-    boolean accessible = true;
     if (args.showSymlinks() && depth + 1 <= args.depth() && visited.add(path)) {
       try {
         Path p = Files.readSymbolicLink(path);
         target = build(p, args, depth + 1);
       } catch (IOException e) {
-        logger.warn("Can't show symlink '" + path + "'");
-        // CR: show e in log
-        // CR: remove accessible field
-        accessible = false;
+        logger.warn("Couldn't read symlink: " + e.getMessage());
       }
     }
-    return new JduSymlink(path, depth, accessible, target);
+    return new JduSymlink(path, depth, target);
   }
 
-  /*
-
-  foo
-    slink
-
- depth = 2
-
- foo
-    slink
-
-
- depth = 4
-
-  foo
-    slink
-      foo
-        slink
-   */
-
   private JduFile buildDirectory(Path path, Arguments args, int depth) {
-    List<JduFile> content = new ArrayList<>();
-    boolean accessible = true;
+    List<JduFile> children = new ArrayList<>();
+    long byteSize = 0;
     try (Stream<Path> contentStream = list(path)) {
       Path[] contentArray = contentStream.toArray(Path[]::new);
       for (Path p : contentArray) {
         JduFile file = build(p, args, depth + 1);
         if (file != null) {
-          content.add(file);
+          children.add(file);
+          byteSize += file.getByteSize();
         }
       }
     } catch (IOException e) {
-      logger.warn("Couldn't read directory '" + path + "'");
-      // CR: set children to null?
-      accessible = false;
+      logger.warn("Couldn't read directory: " + e.getMessage());
+      children = null;
     }
-    return new JduDirectory(path, depth, accessible, content);
+    return new JduDirectory(path, depth, byteSize, children);
   }
 
   private JduFile buildRegularFile(Path path, int depth) {
-    long byteSize = 0;
-    boolean accessible = true;
+    long byteSize;
     try {
       byteSize = Files.size(path);
-    } catch (IOException exception) {
-      logger.warn("Couldn't get the actual size of file '" + path + "'");
-      // CR: log exception.getMessage()
-      accessible = false;
+    } catch (IOException e) {
+      logger.warn("Couldn't get the actual size of file: " + e.getMessage());
+      byteSize = -1;
     }
-    return new JduRegularFile(path, depth, accessible, byteSize);
+    return new JduRegularFile(path, depth, byteSize);
   }
 }

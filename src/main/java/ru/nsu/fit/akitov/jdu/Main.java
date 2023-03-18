@@ -3,14 +3,11 @@ package ru.nsu.fit.akitov.jdu;
 import ru.nsu.fit.akitov.jdu.model.JduBuilder;
 import ru.nsu.fit.akitov.jdu.model.JduFile;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 public class Main {
   public static void main(String[] args) {
     Arguments arguments;
     try {
-      arguments = getArguments(args);
+      arguments = Arguments.Builder.getFromArray(args);
     } catch (JduException e) {
       System.err.println("Error: " + e.getMessage());
       System.err.println(usage());
@@ -21,9 +18,7 @@ public class Main {
       return;
     }
 
-    // CR: static method
-    JduBuilder jduBuilder = new JduBuilder();
-    JduFile file = jduBuilder.build(arguments);
+    JduFile file = JduBuilder.build(arguments);
     JduVisitor stream = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
     file.accept(stream);
   }
@@ -37,43 +32,5 @@ public class Main {
                 --depth n   Max recursion depth (8 by default).
                 -L          Show symlinks.
                 --limit n   Show n heaviest files/directories in every directory.""";
-  }
-
-  // CR: move into builder class
-  private static Arguments getArguments(String[] args) throws JduException {
-    Arguments.Builder builder = new Arguments.Builder();
-    for (int i = 0; i < args.length; i++) {
-      switch (args[i]) {
-        case "--depth" -> {
-          try {
-            builder.setDepth(Integer.parseInt(args[i + 1]));
-            i++;
-          } catch (NumberFormatException e) {
-            throw new JduException("wrong depth parameter: an integer value expected");
-          }
-        }
-        case "--limit" -> {
-          try {
-            builder.setLimit(Integer.parseInt(args[i + 1]));
-            i++;
-          } catch (NumberFormatException e) {
-            throw new JduException("wrong limit parameter: an integer value expected");
-          }
-        }
-        case "-L" -> builder.setSymlinksDisplay(true);
-        default -> {
-          if (i == args.length - 1) {
-            Path path = Path.of(args[i]);
-            if (!Files.exists(path)) {
-              throw new JduException("no such file or directory: " + path);
-            }
-            builder.setFileName(path);
-          } else {
-            throw new JduException("no such parameter '" + args[i] + "'");
-          }
-        }
-      }
-    }
-    return builder.build();
   }
 }

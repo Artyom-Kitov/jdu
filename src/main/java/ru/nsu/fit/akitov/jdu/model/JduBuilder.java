@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.nsu.fit.akitov.jdu.Arguments;
@@ -54,23 +56,43 @@ public final class JduBuilder {
   private JduFile buildSymlink(Path path, Arguments args, int depth) {
     JduFile target = null;
     boolean accessible = true;
-    if (args.showSymlinks() && depth + 1 <= args.depth() && !visited.contains(path)) {
-      visited.add(path);
+    if (args.showSymlinks() && depth + 1 <= args.depth() && visited.add(path)) {
       try {
         Path p = Files.readSymbolicLink(path);
         target = build(p, args, depth + 1);
       } catch (IOException e) {
         logger.warn("Can't show symlink '" + path + "'");
+        // CR: show e in log
+        // CR: remove accessible field
         accessible = false;
       }
     }
     return new JduSymlink(path, depth, accessible, target);
   }
 
+  /*
+
+  foo
+    slink
+
+ depth = 2
+
+ foo
+    slink
+
+
+ depth = 4
+
+  foo
+    slink
+      foo
+        slink
+   */
+
   private JduFile buildDirectory(Path path, Arguments args, int depth) {
     List<JduFile> content = new ArrayList<>();
     boolean accessible = true;
-    try (var contentStream = list(path)) {
+    try (Stream<Path> contentStream = list(path)) {
       Path[] contentArray = contentStream.toArray(Path[]::new);
       for (Path p : contentArray) {
         JduFile file = build(p, args, depth + 1);
@@ -80,6 +102,7 @@ public final class JduBuilder {
       }
     } catch (IOException e) {
       logger.warn("Couldn't read directory '" + path + "'");
+      // CR: set children to null?
       accessible = false;
     }
     return new JduDirectory(path, depth, accessible, content);
@@ -92,6 +115,7 @@ public final class JduBuilder {
       byteSize = Files.size(path);
     } catch (IOException exception) {
       logger.warn("Couldn't get the actual size of file '" + path + "'");
+      // CR: log exception.getMessage()
       accessible = false;
     }
     return new JduRegularFile(path, depth, accessible, byteSize);

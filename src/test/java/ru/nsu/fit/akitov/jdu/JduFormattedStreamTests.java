@@ -23,6 +23,8 @@ public class JduFormattedStreamTests extends JduTest {
     baos.reset();
   }
 
+  // CR: tests for all visits
+
   @Test
   public void emptyFile() throws IOException {
     FileSystem fs = fileSystem();

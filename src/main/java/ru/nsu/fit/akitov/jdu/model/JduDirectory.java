@@ -8,11 +8,11 @@ import java.util.List;
 public final class JduDirectory extends JduFile {
   private final List<JduFile> content;
 
-  JduDirectory(Path path, int depth, boolean accessible, List<JduFile> content) {
+  JduDirectory(Path path, int depth, boolean accessible, List<JduFile> children) {
     super(path, depth, accessible);
-    this.content = content;
-    for (JduFile info : content) {
-      this.byteSize += info.byteSize;
+    this.content = children;
+    for (JduFile child : children) {
+      this.byteSize += child.byteSize;
     }
   }
 

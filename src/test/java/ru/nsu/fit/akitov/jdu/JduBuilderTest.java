@@ -16,6 +16,7 @@ import java.util.List;
 import static junit.framework.TestCase.*;
 
 public class JduBuilderTest extends JduTest {
+
   @Test
   public void emptyDirectory() throws IOException {
     FileSystem fs = fileSystem();
@@ -105,6 +106,17 @@ public class JduBuilderTest extends JduTest {
     assertEquals(5120, jduDir1.getByteSize());
     assertEquals(List.of(jduDir2, jduG), jduDir1.getContent());
   }
+
+  /*
+
+  foo
+   slink1 -> bar
+
+
+  bar
+    slink2 -> foo
+
+   */
 
   @Test
   public void loopSymlink() throws IOException {

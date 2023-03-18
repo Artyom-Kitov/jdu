@@ -16,11 +16,12 @@ public class Main {
       System.err.println(usage());
       return;
     } catch (Exception exception) {
-      System.out.println("Something unknown happened, please try again or contact a developer");
+      System.err.println("Something unknown happened, please try again or contact a developer");
       exception.printStackTrace();
       return;
     }
 
+    // CR: static method
     JduBuilder jduBuilder = new JduBuilder();
     JduFile file = jduBuilder.build(arguments);
     JduVisitor stream = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
@@ -38,6 +39,7 @@ public class Main {
                 --limit n   Show n heaviest files/directories in every directory.""";
   }
 
+  // CR: move into builder class
   private static Arguments getArguments(String[] args) throws JduException {
     Arguments.Builder builder = new Arguments.Builder();
     for (int i = 0; i < args.length; i++) {

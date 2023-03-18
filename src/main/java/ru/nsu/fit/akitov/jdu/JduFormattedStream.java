@@ -8,7 +8,7 @@ import ru.nsu.fit.akitov.jdu.model.JduSymlink;
 import java.io.PrintStream;
 
 /**
- * A wrapper over {@code PrintStream}, which prints a {@code JduFile} in tree-like order.
+ * A wrapper over {@code PrintStream}, which prints a {@code JduFile} in tree-like representation.
  * Implements {@code JduVisitor}.
  */
 public class JduFormattedStream implements JduVisitor {
@@ -17,13 +17,13 @@ public class JduFormattedStream implements JduVisitor {
   private final int limit;
 
   /**
-   * Constructs a {@code JduFormattedStream} from given {@code PrintStream}.
    * @param stream {@code PrintStream} to which everything is printed.
    * @param depth max output recursion depth.
    * @param limit print {@code limit} files in each directory.
    */
   public JduFormattedStream(PrintStream stream, int depth, int limit) {
     this.stream = stream;
+    // CR: maxDepth, maxLimit
     this.depth = depth;
     this.limit = limit;
   }
@@ -55,6 +55,7 @@ public class JduFormattedStream implements JduVisitor {
     stream.println("  ".repeat(regularFile.getDepth()) + regularFile.getPath().getFileName() + getSizeSuffix(regularFile));
   }
 
+  // CR: example
   /**
    * Prints the given {@code JduSymlink} name and its target recursively (if built)
    * to the {@code PrintStream} using {@code JduVisitor::visit}.

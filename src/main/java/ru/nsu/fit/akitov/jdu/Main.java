@@ -7,7 +7,7 @@ public class Main {
   public static void main(String[] args) {
     Arguments arguments;
     try {
-      arguments = Arguments.Builder.getFromArray(args);
+      arguments = Arguments.Builder.get(args);
     } catch (JduException e) {
       System.err.println("Error: " + e.getMessage());
       System.err.println(usage());
@@ -18,7 +18,7 @@ public class Main {
       return;
     }
 
-    JduFile file = JduBuilder.build(arguments);
+    JduFile file = JduBuilder.build(arguments.fileName(), arguments.showSymlinks());
     JduVisitor stream = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
     file.accept(stream);
   }

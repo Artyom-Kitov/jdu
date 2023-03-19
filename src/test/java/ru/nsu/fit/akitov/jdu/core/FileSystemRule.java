@@ -10,7 +10,7 @@ import org.junit.runners.model.Statement;
 class FileSystemRule implements TestRule {
   private FileSystem fileSystem;
 
-  FileSystem getFileSystem() {
+  public FileSystem getFileSystem() {
     return fileSystem;
   }
 

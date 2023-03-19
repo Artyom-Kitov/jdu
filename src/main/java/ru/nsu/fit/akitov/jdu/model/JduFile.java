@@ -6,30 +6,22 @@ import java.util.Objects;
 import ru.nsu.fit.akitov.jdu.JduVisitor;
 
 /**
- *
- * CR:
- * - hierarchy
- * - differences
- *
  * An object that could be used to get some information about
  * a file, a directory or a symlink.
- * Created using {@code JduBuilder} only.
+ * Has 3 inheritors:
+ * <p>- {@code JduRegularFile} represents a regular file.</p>
+ * <p>- {@code JduDirectory} represents a directory of files.
+ * Size is equal to sum of children sizes. Has a list of children.</p>
+ * <p>- {@code JduSymlink} represents a symbolic link to a directory or a file.
+ * Size is undefined and target JduFile size is not added to the parent directory.</p>
+ * <p>Created using {@code JduBuilder} only.</p>
  */
-
-//interface DuFile {
-//  Path path();
-//}
-//
-//record JduDir implements DuFile(Path path) {}
-
 public abstract sealed class JduFile permits JduDirectory, JduRegularFile, JduSymlink {
   protected final Path path;
-  protected final int depth;
-  protected final long byteSize;
+  protected long byteSize;
 
-  protected JduFile(Path path, int depth, long byteSize) {
+  protected JduFile(Path path, long byteSize) {
     this.path = path;
-    this.depth = depth;
     this.byteSize = byteSize;
   }
 
@@ -41,8 +33,8 @@ public abstract sealed class JduFile permits JduDirectory, JduRegularFile, JduSy
     return byteSize;
   }
 
-  public int getDepth() {
-    return depth;
+  public void setByteSize(long byteSize) {
+    this.byteSize = byteSize;
   }
 
   public abstract boolean isAccessible();
@@ -51,10 +43,10 @@ public abstract sealed class JduFile permits JduDirectory, JduRegularFile, JduSy
 
   @Override
   public boolean equals(Object o) {
-    // CR: o.getClass()
-    if (!(o instanceof JduFile file)) {
+    if (o.getClass() != getClass()) {
       return false;
     }
+    JduFile file = (JduFile) o;
     return Objects.equals(path, file.path);
   }
 

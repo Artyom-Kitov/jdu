@@ -7,8 +7,8 @@ import java.nio.file.Path;
 public final class JduSymlink extends JduFile {
   private final JduFile target;
 
-  JduSymlink(Path path, int depth, JduFile target) {
-    super(path, depth, 0);
+  JduSymlink(Path path, JduFile target) {
+    super(path, 0);
     this.target = target;
   }
 

@@ -16,17 +16,15 @@ public record Arguments(int depth, boolean showSymlinks, int limit, Path fileNam
     private int limit = DEFAULT_LIMIT;
     private Path fileName = DEFAULT_PATH;
 
-    public static Arguments get(String... args) throws JduException {
+    public static Arguments buildFromStrings(String... args) throws JduException {
       Arguments.Builder builder = new Arguments.Builder();
       for (int i = 0; i < args.length; i++) {
         switch (args[i]) {
           case "--depth" -> {
             try {
-              // CR: out of bounds
               builder.setDepth(Integer.parseUnsignedInt(args[i + 1]));
               i++;
-            // CR:not any exception, just the ones that we know about
-            } catch (Exception e) {
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
               throw new JduException("wrong depth parameter: a positive integer value expected");
             }
           }

@@ -7,16 +7,22 @@ import java.util.Objects;
 
 /**
  * An object that could be used to get some information about
- * a file, a directory or a symlink.
- * <p/>
+ * a file, a directory or a symbolic link.
  * Has 3 inheritors:
- * // CR: use '<li></li>' instead
- * <p>- {@code JduRegularFile} represents a regular file.</p>
- * <p>- {@code JduDirectory} represents a directory of files.
- * Size is equal to sum of children sizes. Has a list of children.</p>
- * <p>- {@code JduSymlink} represents a symbolic link to a directory or a file.
- * Size is undefined and target JduFile size is not added to the parent directory.</p>
- * <p>Created using {@code JduBuilder} only.</p>
+ * <ul>
+ *   <li>
+ *     {@code JduRegularFile} represents a regular file.
+ *   </li>
+ *   <li>
+ *     {@code JduDirectory} represents a directory of files.
+ *     Size is equal to sum of children sizes. Has a list of children.
+ *   </li>
+ *   <li>
+ *     {@code JduSymlink} represents a symbolic link to a directory or a file. Size is undefined and
+ *     target {@code JduFile} size is not added to the parent directory.
+ *   </li>
+ * </ul>
+ * Created using {@code JduBuilder} only.
  */
 public abstract sealed class JduFile permits JduDirectory, JduRegularFile, JduSymlink {
 

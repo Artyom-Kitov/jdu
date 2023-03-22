@@ -7,8 +7,7 @@ public class Main {
   public static void main(String[] args) {
     Arguments arguments;
     try {
-      // CR: strange method name
-      arguments = Arguments.Builder.get(args);
+      arguments = Arguments.Builder.buildFromStrings(args);
     } catch (JduException e) {
       System.err.println("Error: " + e.getMessage());
       System.err.println(usage());
@@ -20,9 +19,8 @@ public class Main {
     }
 
     JduFile file = JduBuilder.build(arguments.fileName(), arguments.showSymlinks());
-    // CR: add static method print, similar to JduBuilder
-    JduVisitor stream = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
-    file.accept(stream);
+    JduFormattedStream stream = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
+    stream.print(file);
   }
 
   private static String usage() {

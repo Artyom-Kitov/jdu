@@ -7,7 +7,7 @@ import static junit.framework.TestCase.*;
 public class ArgumentsBuilderTests {
   @Test
   public void defaultParams() throws JduException {
-    Arguments args = Arguments.Builder.get();
+    Arguments args = Arguments.Builder.buildFromStrings();
     assertEquals(Arguments.DEFAULT_DEPTH, args.depth());
     assertEquals(Arguments.DEFAULT_LIMIT, args.limit());
     assertFalse(args.showSymlinks());
@@ -16,34 +16,34 @@ public class ArgumentsBuilderTests {
 
   @Test(expected = JduException.class)
   public void unknownFileName() throws JduException {
-    Arguments.Builder.get("f");
+    Arguments.Builder.buildFromStrings("f");
   }
 
   @Test(expected = JduException.class)
   public void depth() throws JduException {
-    Arguments args = Arguments.Builder.get("--depth", "42");
+    Arguments args = Arguments.Builder.buildFromStrings("--depth", "42");
     assertEquals(42, args.depth());
     assertEquals(Arguments.DEFAULT_LIMIT, args.limit());
     assertFalse(args.showSymlinks());
     assertEquals(Arguments.DEFAULT_PATH, args.fileName());
 
-    Arguments.Builder.get("--depth");
+    Arguments.Builder.buildFromStrings("--depth");
   }
 
   @Test(expected = JduException.class)
   public void limit() throws JduException {
-    Arguments args = Arguments.Builder.get("--limit", "42");
+    Arguments args = Arguments.Builder.buildFromStrings("--limit", "42");
     assertEquals(Arguments.DEFAULT_DEPTH, args.depth());
     assertEquals(42, args.limit());
     assertFalse(args.showSymlinks());
     assertEquals(Arguments.DEFAULT_PATH, args.fileName());
 
-    Arguments.Builder.get("--limit");
+    Arguments.Builder.buildFromStrings("--limit");
   }
 
   @Test
   public void symlinks() throws JduException {
-    Arguments args = Arguments.Builder.get("-L");
+    Arguments args = Arguments.Builder.buildFromStrings("-L");
     assertEquals(Arguments.DEFAULT_DEPTH, args.depth());
     assertEquals(Arguments.DEFAULT_LIMIT, args.limit());
     assertTrue(args.showSymlinks());
@@ -52,14 +52,17 @@ public class ArgumentsBuilderTests {
 
   @Test
   public void anyOrder() throws JduException {
-    Arguments args1 = Arguments.Builder.get("--depth", "12", "--limit", "8", "-L");
-    Arguments args2 = Arguments.Builder.get("--limit", "8", "--depth", "12", "-L");
-    Arguments args3 = Arguments.Builder.get("--depth", "12", "-L", "--limit", "8");
-    Arguments args4 = Arguments.Builder.get("-L", "--limit", "8", "--depth", "12");
+    Arguments args1 = Arguments.Builder.buildFromStrings("--depth", "12", "--limit", "8", "-L");
+    Arguments args2 = Arguments.Builder.buildFromStrings("--limit", "8", "--depth", "12", "-L");
+    Arguments args3 = Arguments.Builder.buildFromStrings("--depth", "12", "-L", "--limit", "8");
+    Arguments args4 = Arguments.Builder.buildFromStrings("-L", "--limit", "8", "--depth", "12");
     assertEquals(args1, args2);
     assertEquals(args2, args3);
     assertEquals(args3, args4);
   }
 
-  // CR: test for the filename in the middle of arguments
+  @Test(expected = JduException.class)
+  public void fileNameAtMiddle() throws JduException {
+    Arguments.Builder.buildFromStrings("--depth", "12", "file.txt", "--limit", "8", "-L");
+  }
 }

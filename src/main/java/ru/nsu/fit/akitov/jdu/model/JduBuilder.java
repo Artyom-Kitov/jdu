@@ -28,13 +28,12 @@ public final class JduBuilder {
 
   /**
    * Builds a {@code JduFile} for {@code path}.
-   * <p>If {@code path} is a directory, builds recursively for subdirectories.</p>
-   * <p>If {@code path} is a symbolic link and {@code buildSymlinks} is true, builds recursively for target.</p>
+   * <p>If {@code path} is a directory, builds recursively for all files and subdirectories to their very ends.</p>
+   * <p>If {@code path} is a symbolic link and {@code buildSymlinks} is true, builds recursively for target.
+   * If the target {@code JduFile} is built, refers to it, otherwise builds it as a file or a directory.</p>
    * <p>Logs an error if no such file or directory exists or something unexpected happened.</p>
    * <p>If {@code path} is a regular file and couldn't get its size, logs a warning.</p>
    * <p>If something went wrong while reading {@code path}, logs a warning and returns null.</p>
-   *
-   * // CR: add description on how recursion is handled
    *
    * @param path          {@code Path} to build from.
    * @param buildSymlinks build symlinks targets or not.

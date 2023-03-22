@@ -98,21 +98,33 @@ public class JduBuilderTest extends JduTest {
   @Test
   public void loopSymlink() throws IOException {
     FileSystem fs = fileSystem();
-    Path d = fs.getPath("/d");
+    Path d = fs.getPath("d");
     Files.createDirectory(d);
-    Path link = fs.getPath("/d/link");
-    Files.createSymbolicLink(link, fs.getPath("/"));
+    Path link = fs.getPath("d/link");
+    Files.createSymbolicLink(link, fs.getPath("d"));
 
     JduSymlink jduLink = (JduSymlink) JduBuilder.build(link, true);
-    assertEquals(fs.getPath("/"), jduLink.getTarget().getPath());
+    JduDirectory dir = (JduDirectory) jduLink.getTarget();
+    assertEquals(jduLink, dir.getChildren().get(0));
   }
 
-  /*
-  CR: add test for such loop
+  @Test
+  public void complexLoopSymlink() throws IOException {
+    FileSystem fs = fileSystem();
+    Path d1 = fs.getPath("d1");
+    Files.createDirectory(d1);
+    Path d2 = fs.getPath("d2");
+    Files.createDirectory(d2);
+    Path link1 = d1.resolve("link1");
+    Files.createSymbolicLink(link1, d2);
+    Path link2 = d2.resolve("link2");
+    Files.createSymbolicLink(link2, d1);
 
-  foo
-    slink1 -> bar
-  bar
-    slink2 -> foo
-   */
+    JduDirectory jd1 = (JduDirectory) JduBuilder.build(d1, true);
+    JduSymlink jlink1 = (JduSymlink) jd1.getChildren().get(0);
+    assertEquals(fs.getPath("d2"), jlink1.getTarget().getPath());
+    JduDirectory jd2 = (JduDirectory) jlink1.getTarget();
+    JduSymlink jlink2 = (JduSymlink) jd2.getChildren().get(0);
+    assertEquals(fs.getPath("d1"), jlink2.getTarget().getPath());
+  }
 }

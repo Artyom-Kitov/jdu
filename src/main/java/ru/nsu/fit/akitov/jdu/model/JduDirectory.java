@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public final class JduDirectory extends JduFile {
+
   private List<JduFile> children;
 
   JduDirectory(Path path, long byteSize, List<JduFile> children) {

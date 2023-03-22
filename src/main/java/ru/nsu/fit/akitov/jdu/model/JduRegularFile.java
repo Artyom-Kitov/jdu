@@ -5,6 +5,7 @@ import ru.nsu.fit.akitov.jdu.JduVisitor;
 import java.nio.file.Path;
 
 public final class JduRegularFile extends JduFile {
+
   JduRegularFile(Path path, long byteSize) {
     super(path, byteSize);
   }

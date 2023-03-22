@@ -106,4 +106,13 @@ public class JduBuilderTest extends JduTest {
     JduSymlink jduLink = (JduSymlink) JduBuilder.build(link, true);
     assertEquals(fs.getPath("/"), jduLink.getTarget().getPath());
   }
+
+  /*
+  CR: add test for such loop
+
+  foo
+    slink1 -> bar
+  bar
+    slink2 -> foo
+   */
 }

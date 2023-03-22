@@ -7,6 +7,7 @@ public class Main {
   public static void main(String[] args) {
     Arguments arguments;
     try {
+      // CR: strange method name
       arguments = Arguments.Builder.get(args);
     } catch (JduException e) {
       System.err.println("Error: " + e.getMessage());
@@ -19,18 +20,19 @@ public class Main {
     }
 
     JduFile file = JduBuilder.build(arguments.fileName(), arguments.showSymlinks());
+    // CR: add static method print, similar to JduBuilder
     JduVisitor stream = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
     file.accept(stream);
   }
 
   private static String usage() {
     return """
-              Usage: ./jdu [OPTIONS] [FILE]
-              Summarize disk usage of a file, recursively for directories.
-              
-              Possible options:
-                --depth n   Max recursion depth (8 by default).
-                -L          Show symlinks.
-                --limit n   Show n heaviest files/directories in every directory.""";
+            Usage: ./jdu [OPTIONS] [FILE]
+            Summarize disk usage of a file, recursively for directories.
+                          
+            Possible options:
+              --depth n   Max recursion depth (8 by default).
+              -L          Show symlinks.
+              --limit n   Show n heaviest files/directories in every directory.""";
   }
 }

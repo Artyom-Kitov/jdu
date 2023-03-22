@@ -8,19 +8,20 @@ import ru.nsu.fit.akitov.jdu.model.JduSymlink;
 import java.io.PrintStream;
 
 /**
- * A wrapper over {@code PrintStream}, which prints a {@code JduFile} in tree-like representation.
+ * A wrapper over {@code PrintStream}, which prints a {@code JduFile} in a tree-like representation.
  * Implements {@code JduVisitor}.
  */
 public class JduFormattedStream implements JduVisitor {
+
   private final PrintStream stream;
   private final int maxDepth;
   private final int limit;
   private int currentDepth;
 
   /**
-   * @param stream {@code PrintStream} to which everything is printed.
+   * @param stream   {@code PrintStream} to which everything is printed.
    * @param maxDepth max output recursion depth.
-   * @param limit print {@code limit} files in each directory and subdirectory.
+   * @param limit    print {@code limit} files in each directory and subdirectory.
    */
   public JduFormattedStream(PrintStream stream, int maxDepth, int limit) {
     this.stream = stream;
@@ -31,6 +32,7 @@ public class JduFormattedStream implements JduVisitor {
 
   private static String getSizeSuffix(JduFile file) {
     if (!file.isAccessible()) {
+      // CR: better '[unknown]'
       return " [inaccessible]";
     }
     float size = file.getByteSize();
@@ -48,8 +50,8 @@ public class JduFormattedStream implements JduVisitor {
 
   /**
    * <p>
-   *   Prints the given {@code JduRegularFile} name and its size
-   *   to the {@code PrintStream} using {@code JduVisitor::visit}.
+   * Prints the given {@code JduRegularFile} name and its size
+   * to the {@code PrintStream} using {@code JduVisitor::visit}.
    * </p>
    * <p></p>
    * e.g. output for a 4-KiB file foo:
@@ -64,9 +66,9 @@ public class JduFormattedStream implements JduVisitor {
 
   /**
    * <p>
-   *   Prints the given {@code JduSymlink} name and its target
-   *   recursively (if built) to the {@code PrintStream}
-   *   using {@code JduVisitor::visit}.
+   * Prints the given {@code JduSymlink} name and its target
+   * recursively (if built) to the {@code PrintStream}
+   * using {@code JduVisitor::visit}.
    * </p>
    * e.g.:
    * <pre>
@@ -88,8 +90,8 @@ public class JduFormattedStream implements JduVisitor {
 
   /**
    * <p>
-   *   Prints the given {@code JduSymlink} name and its target recursively (if built)
-   *   to the {@code PrintStream} using {@code JduVisitor::visit}.
+   * Prints the given {@code JduSymlink} name and its target recursively (if built)
+   * to the {@code PrintStream} using {@code JduVisitor::visit}.
    * </p>
    * e.g.:
    * <pre>
@@ -107,6 +109,7 @@ public class JduFormattedStream implements JduVisitor {
     if (currentDepth == maxDepth || !directory.isAccessible()) {
       return;
     }
+    // CR: make comparator private static final field
     directory.getChildren().sort((a, b) -> -Long.compare(a.getByteSize(), b.getByteSize()));
     currentDepth++;
     for (int i = 0; i < directory.getChildren().size() && i < limit; i++) {

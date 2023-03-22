@@ -27,6 +27,7 @@ public class JduFormattedStreamTests extends JduTest {
 
   @Test
   public void printFile() throws IOException {
+    // CR: you should not use real files in unit test for printer (that's why it's unit test)
     FileSystem fs = fileSystem();
     Path tmp = fs.getPath("tmp");
     Files.createFile(tmp);

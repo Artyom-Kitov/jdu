@@ -1,5 +1,8 @@
 package ru.nsu.fit.akitov.jdu.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,12 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import static java.nio.file.Files.list;
 
 public final class JduBuilder {
+
   private final Map<Path, JduFile> built;
   private final Logger logger;
   private final boolean buildSymlinks;
@@ -32,7 +33,10 @@ public final class JduBuilder {
    * <p>Logs an error if no such file or directory exists or something unexpected happened.</p>
    * <p>If {@code path} is a regular file and couldn't get its size, logs a warning.</p>
    * <p>If something went wrong while reading {@code path}, logs a warning and returns null.</p>
-   * @param path {@code Path} to build from.
+   *
+   * // CR: add description on how recursion is handled
+   *
+   * @param path          {@code Path} to build from.
    * @param buildSymlinks build symlinks targets or not.
    * @return the resulting {@code JduFile} or null if no such file or directory exists
    * or something unexpected happened.
@@ -51,7 +55,7 @@ public final class JduBuilder {
     } else if (Files.isRegularFile(path)) {
       result = buildRegularFile(path);
     } else {
-      logger.error("Something unknown happened while building '" + path.toAbsolutePath() + "', please try again");
+      logger.error("Something unknown happened while building '" + path.toAbsolutePath() + "', skipping");
     }
     if (result != null) {
       built.put(path, result);

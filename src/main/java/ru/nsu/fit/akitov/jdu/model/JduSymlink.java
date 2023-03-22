@@ -5,6 +5,7 @@ import ru.nsu.fit.akitov.jdu.JduVisitor;
 import java.nio.file.Path;
 
 public final class JduSymlink extends JduFile {
+
   private final JduFile target;
 
   JduSymlink(Path path, JduFile target) {

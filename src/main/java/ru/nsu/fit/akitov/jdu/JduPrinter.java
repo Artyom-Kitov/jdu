@@ -12,16 +12,17 @@ import java.util.Comparator;
  * A wrapper over {@code PrintStream}, which prints a {@code JduFile} in a tree-like representation.
  * Implements {@code JduVisitor}.
  */
-public class JduFormattedStream {
-  private final Printer printer;
+public class JduPrinter {
+
+  private final PrinterVisitor printer;
 
   /**
    * @param stream   {@code PrintStream} to which everything is printed.
    * @param maxDepth max output recursion depth.
    * @param limit    print {@code limit} files in each directory and subdirectory.
    */
-  public JduFormattedStream(PrintStream stream, int maxDepth, int limit) {
-    printer = new Printer(stream, maxDepth, limit);
+  public JduPrinter(PrintStream stream, int maxDepth, int limit) {
+    printer = new PrinterVisitor(stream, maxDepth, limit);
   }
 
   /**
@@ -57,14 +58,15 @@ public class JduFormattedStream {
     file.accept(printer);
   }
 
-  private static class Printer implements JduVisitor {
+  private static class PrinterVisitor implements JduVisitor {
+
     private final PrintStream stream;
     private final int maxDepth;
     private final int limit;
     private int currentDepth;
     private static final Comparator<? super JduFile> comparator = (a, b) -> -Long.compare(a.getByteSize(), b.getByteSize());
 
-    public Printer(PrintStream stream, int maxDepth, int limit) {
+    public PrinterVisitor(PrintStream stream, int maxDepth, int limit) {
       this.stream = stream;
       this.maxDepth = maxDepth;
       this.limit = limit;

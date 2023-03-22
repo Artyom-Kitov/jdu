@@ -19,8 +19,8 @@ public class Main {
     }
 
     JduFile file = JduBuilder.build(arguments.fileName(), arguments.showSymlinks());
-    JduFormattedStream stream = new JduFormattedStream(System.out, arguments.depth(), arguments.limit());
-    stream.print(file);
+    JduPrinter printer = new JduPrinter(System.out, arguments.depth(), arguments.limit());
+    printer.print(file);
   }
 
   private static String usage() {
